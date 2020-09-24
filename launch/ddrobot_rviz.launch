@@ -6,7 +6,7 @@
 
     <!-- set these parameters on Parameter Server -->
     <param name="robot_description" 
-        textfile="$(find ros_robotics)/urdf/$(arg model)" />
+        textfile="$(find ros_robotic)/urdf/$(arg model)" />
     <param name="use_gui" value="$(arg gui)"/>
 
     <!-- Start 3 nodes: joint_state_publisher, robot_state_publisher and rviz -->
@@ -20,7 +20,7 @@
 
     <node name="rviz" 
         pkg="rviz" type="rviz" 
-        args="-d $(find ros_robotics)/urdf.rviz" 
+        args="-d $(find ros_robotic)/urdf.rviz" 
         required="true" />
     <!-- (required = "true") if rviz dies, entire roslaunch will be killed -->
 </launch>

@@ -2,7 +2,7 @@
 <launch>
     
     <!-- Cargar el modelo del robot -->
-    <arg name="model" default="$(find ros_robotics)/urdf/dd_robot.urdf"/>
+    <arg name="model" default="$(find ros_robotic)/urdf/dd_robot.urdf"/>
 
     <!-- Parse of Model -->
     <param 
