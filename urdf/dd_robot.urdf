@@ -1,10 +1,20 @@
 <?xml version="1.0"?>
-<robot name="dd_robot">
+<robot name="robot_rycsv">
+
+    <!-- Marco de referencia (Eslabon) inercial-->
+    <link name="base_footprint"/>
+
+    <!-- Definicion de la junta entre base_footprint y base_link-->
+    <joint name="fixed_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0575" rpy="0.0 0.0 0.0"/>
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+    </joint>
 
     <!-- Base Link-->
     <link name="base_link">
         <visual>
-            <origin xyz="0.0 0.0 0.0575" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <cylinder radius="0.175" length="0.089"/>
             </geometry>
@@ -19,25 +29,28 @@
                      iyy="0.0182959" iyz="0.0" izz="0.0336875"/>
         </inertial>
         
-
-        <!-- Base collision-->
         <collision>
             <origin xyz="0.0 0.0 0.0575" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <cylinder radius="0.175" length="0.089"/>
             </geometry>
         </collision>
+    </link>
 
+    <joint name="joint_front_wheel" type="fixed">
+        <origin xyz="0.115 0.0 -0.039" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="front_wheel"/>
+    </joint>
 
-        <!-- Casters-->
-        <visual name="front_wheel">
-            <origin xyz="0.115 0.0 0.017" rpy="1.570735 0.0 0.0"/>
+    <link name="front_wheel">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="1.570735 0.0 0.0"/>
             <geometry>
                 <cylinder radius="0.017" length="0.01"/>
             </geometry>
             <material name="black">
                 <color rgba="0.05 0.05 0.05 1.0"/>
-                <texture filename=""/>
             </material>
         </visual>
 
@@ -46,10 +59,24 @@
             <inertia ixx="0.000002014" ixy="0.0" ixz="0.0" 
                      iyy="0.0000036125" iyz="0.0" izz="0.000002014"/>
         </inertial>
-        
 
-        <visual name="back_wheel">
-            <origin xyz="-0.115 0.0 0.017" rpy="1.570795 0.0 0.0"/>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="1.570735 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="0.017" length="0.01"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint_back_wheel" type="fixed">
+        <origin xyz="-0.115 0.0 -0.039" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="back_wheel"/>
+    </joint>
+
+    <link name="back_wheel">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="1.570735 0.0 0.0"/>
             <geometry>
                 <cylinder radius="0.017" length="0.01"/>
             </geometry>
@@ -62,23 +89,22 @@
                      iyy="0.0000036125" iyz="0.0" izz="0.000002014"/>
         </inertial>
 
-        <!-- Casters collision-->
         <collision>
-            <origin xyz="0.115 0.0 0.017" rpy="1.570735 0.0 0.0"/>
-            <geometry>
-                <cylinder radius="0.017" length="0.01"/>
-            </geometry>
-        </collision>
-
-        <collision>
-            <origin xyz="-0.115 0.0 0.017" rpy="1.570795 0.0 0.0"/>
+            <origin xyz="0.0 0.0 0.0" rpy="1.570735 0.0 0.0"/>
             <geometry>
                 <cylinder radius="0.017" length="0.01"/>
             </geometry>
         </collision>
     </link>
 
-    <!-- Right Wheel-->
+    <joint name="joint_right_wheel" type="continuous">
+        <parent link="base_link"/>
+        <child link="right_wheel"/>
+        <origin xyz="0.0 -0.117539 -0.0233" rpy="0.0 0.0 0.0"/>
+        <axis xyz="0.0 1.0 0.0"/>  
+        <limit effort="100" velocity="6.0"/>      
+    </joint>
+    
     <link name="right_wheel">
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="1.570795 0.0 0.0"/>
@@ -94,7 +120,6 @@
                      iyy="0.000029241" iyz="0.0" izz="0.0000167179"/>
         </inertial>
 
-        <!-- Right Wheel collision-->
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="1.570795 0.0 0.0"/>
             <geometry>
@@ -103,25 +128,14 @@
         </collision>
     </link>
 
-    <joint name="joint_right_wheel" type="continuous">
+    <joint name="joint_left_wheel" type="continuous">
         <parent link="base_link"/>
-        <child link="right_wheel"/>
-        <origin xyz="0.0 -0.117539 0.03423" rpy="0.0 0.0 0.0"/>
+        <child link="left_wheel"/>
+        <origin xyz="0.0 0.117539 -0.0233" rpy="0.0 0.0 0.0"/>
         <axis xyz="0.0 1.0 0.0"/>  
-        <limit effort="10" velocity="6.0"/>      
+        <limit effort="100" velocity="6.0"/>      
     </joint>
-
-    <transmission name="tranmission_1">
-        <type>transmission_interface/SimpleTransmission</type>
-        <joint name="joint_right_wheel">
-            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-        </joint>
-        <actuator name="right_motor">
-            <mechanicalReduction>1</mechanicalReduction>
-        </actuator>
-    </transmission>
-
-    <!-- Left Wheel-->
+    
     <link name="left_wheel">
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="1.570795 0.0 0.0"/>
@@ -137,7 +151,6 @@
                      iyy="0.000029241" iyz="0.0" izz="0.0000167179"/>
         </inertial>
 
-        <!-- Left Wheel collision-->
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="1.570795 0.0 0.0"/>
             <geometry>
@@ -146,14 +159,16 @@
         </collision>
     </link>
 
-    <joint name="joint_left_wheel" type="continuous">
-        <parent link="base_link"/>
-        <child link="left_wheel"/>
-        <origin xyz="0.0 0.117539 0.03423" rpy="0.0 0.0 0.0"/>
-        <axis xyz="0.0 1.0 0.0"/>    
-        <limit effort="10" velocity="6.0"/>    
-    </joint>
-    
+    <transmission name="tranmission_1">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_right_wheel">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="right_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
     <transmission name="tranmission_2">
         <type>transmission_interface/SimpleTransmission</type>
         <joint name="joint_left_wheel">
